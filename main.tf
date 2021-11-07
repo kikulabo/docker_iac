@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "terraform-236614022713"
-    key    = "docker_iac.terraform.tfstate.aws"
+    key    = "versionup.terraform.tfstate.aws"
     region = "ap-northeast-1"
   }
 
@@ -14,7 +14,17 @@ terraform {
 }
 
 provider "aws" {
+  alias = "ap-northeast-1"
   region = "ap-northeast-1"
+}
+
+variable "amis" {
+  type = map(string)
+  default = {
+    us-east-1      = "ami-0dc185deadd3ac449"
+    us-west-2      = "ami-014612c2d9afaf1ac"
+    ap-northeast-1 = "ami-01748a72bed07727c"
+  }
 }
 
 variable "vpc_cidr" {
@@ -27,4 +37,18 @@ resource "aws_vpc" "main" {
   tags = {
     Name = "new-docker_iac_vpc"
   }
+}
+
+variable "public_subnet_cidrs" {
+  type    = list(string)
+  default = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
+}
+
+module "create_ses" {
+    source = "./module/"
+    domain = "kikulabo.com"
+
+    providers = {
+      aws.ap-northeast-1 = aws.ap-northeast-1
+    }
 }
