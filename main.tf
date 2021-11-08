@@ -18,6 +18,11 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
+provider "aws" {
+  alias = "us-west-2"
+  region = "us-west-2"
+}
+
 variable "amis" {
   type = map(string)
   default = {
@@ -47,8 +52,8 @@ variable "public_subnet_cidrs" {
 module "create_ses" {
     source = "./module/"
     domain = "kikulabo.com"
-
     providers = {
+      aws.us-west-2 = aws.us-west-2
       aws.ap-northeast-1 = aws.ap-northeast-1
     }
 }
