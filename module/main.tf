@@ -1,11 +1,9 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-      version = "3.64.2"
-      configuration_aliases = [aws.us-west-2,aws.ap-northeast-1]
-    }
-  }
+provider "aws" {
+    alias = "ap-northeast-1"
+}
+
+provider "aws" {
+    alias = "us-west-2"
 }
 
 variable domain {
